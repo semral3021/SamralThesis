@@ -1,0 +1,52 @@
+@startuml
+title System Context & Use Cases — Fiction Semantic Analyzer (with Grammarly)
+
+skinparam shadowing false
+skinparam rectangle {
+  BackgroundColor White
+  BorderColor #555
+}
+
+actor Researcher as R
+actor "Student / Critic" as S
+actor Librarian as L
+actor Admin as A
+
+rectangle "Fiction Semantic Analyzer (FSA) — Web App" as FSA {
+  usecase "Upload Manuscript" as UC1
+  usecase "Run Semantic Analysis\n(Topics, Characters, Emotions)" as UC2
+  usecase "Generate Executive Summary\n(LLM)" as UC3
+  usecase "Style/Clarity Pass\n(Partner API)" as UC4
+  usecase "Export Reports / JSON" as UC5
+  usecase "Manage Corpora & Access" as UC6
+}
+
+R --> UC1
+R --> UC2
+R --> UC3
+R --> UC5
+S --> UC2
+S --> UC3
+S --> UC5
+L --> UC6
+A --> UC6
+
+package "External Systems" {
+  rectangle "Grammarly Enterprise API\n(style, tone, clarity hints)" as GRM
+  rectangle "LLM Provider (GPT-4 class)\n(summaries, Q&A, RAG)" as LLM
+  rectangle "Vector DB\n(Embeddings / RAG Index)" as VDB
+  rectangle "Object Storage (Manuscripts/Assets)" as OBJ
+}
+
+FSA .. GRM : style checks
+FSA .. LLM : prompts + context
+FSA .. VDB : embed/query
+FSA .. OBJ : upload/download
+
+note bottom of GRM
+  Rationale for company fit:
+  • Deep expertise in text quality
+  • Enterprise integrations
+  • Complements literary semantic insights
+end note
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+title Deployment — Cloud Infrastructure
+
+node "User Device" {
+  artifact "Browser"
+}
+
+node "CDN/Edge" as CDN
+node "K8s Cluster" {
+  node "Web Tier" {
+    component "Next.js\n(SSR)" as WEB
+    component "API Gateway" as APIGW
+  }
+  node "App Tier" {
+    component "Backend API"
+    component "Orchestrator"
+  }
+  node "Worker Tier (GPU/CPU)" {
+    component "NLP Workers"
+    component "Embedding/LLM Proxy"
+  }
+  node "Data Tier" {
+    database "Relational DB"
+    database "Vector DB"
+    collections "Object Storage (S3)"
+    component "Message Queue"
+    component "Secrets Manager"
+  }
+}
+
+Browser --> CDN
+CDN --> WEB
+WEB --> APIGW
+APIGW --> "Backend API"
+"Backend API" --> "Orchestrator"
+"Orchestrator" --> "Message Queue"
+"NLP Workers" --> "Message Queue"
+"NLP Workers" --> "Object Storage (S3)"
+"NLP Workers" --> "Vector DB"
+"NLP Workers" --> "Relational DB"
+"Embedding/LLM Proxy" --> "Secrets Manager"
+
+cloud "Partner / Providers" {
+  component "Grammarly Enterprise API"
+  component "LLM Provider (GPT-4 class)"
+}
+"NLP Workers" --> "Grammarly Enterprise API"
+"Embedding/LLM Proxy" --> "LLM Provider (GPT-4 class)"
+@enduml
