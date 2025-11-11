@@ -1,0 +1,47 @@
+@startuml
+title Sequence — Run Full Analysis on a Manuscript
+
+actor User
+participant "Next.js UI" as UI
+participant "Backend API" as API
+participant "Orchestrator" as ORCH
+participant "Workers" as W
+participant "Grammarly\nEnterprise" as GRM
+participant "RAG/LLM" as LLM
+database "Vector DB" as VDB
+database "Relational DB" as RDB
+collections "Object Storage" as OBJ
+
+User -> UI : Upload manuscript (.txt/.epub/.docx)
+UI -> OBJ : PUT file
+UI -> API : POST /analysis {fileRef, options}
+API -> ORCH : enqueue(jobId)
+ORCH -> W : start(jobId)
+
+group NLP pipeline
+  W -> OBJ : GET fileRef
+  W -> W : tokenize/clean/split
+  W -> W : SpaCy POS/NER
+  W -> W : Character & Quote extraction
+  W -> W : BERTopic / LDA topics
+  W -> VDB : upsert embeddings
+  W -> RDB : persist entities, topics, edges
+end
+
+group Partner style pass
+  W -> GRM : /style/clarity(text chunks)
+  GRM --> W : suggestions, scores
+  W -> RDB : store style results
+end
+
+group Generative summary via RAG
+  W -> LLM : prompt{ task: "Executive summary", context: retrieve(VDB) }
+  LLM --> W : summary, key insights, QA vectors
+  W -> RDB : persist generative outputs
+end
+
+W --> ORCH : done(jobId)
+ORCH --> API : status=COMPLETED
+API -> UI : GET /analysis/{id}/report
+UI -> User : Show graphs, themes, char network, style hints, summary
+@enduml
