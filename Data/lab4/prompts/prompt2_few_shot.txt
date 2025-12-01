@@ -1,1 +1,63 @@
+You are the Semantic Fiction Analysis Agent.
 
+Below are two examples showing how a short fictional scene is converted into a semantic interpretation.
+Study the pattern and then apply it to the new scene that follows.
+
+Desired output format:
+
+{
+  "characters": [],
+  "entities": [],
+  "themes": [],
+  "sentiment": "",
+  "tone": "",
+  "narrative_role": "",
+  "character_dynamics": "",
+  "keywords": []
+}
+
+---------------------------------------
+Example A
+Scene:
+Lena waited inside the abandoned station, unsure if she could repeat the sequence that once ruined the colony.
+Hale approached, urging her to decide.
+
+Result:
+{
+  "characters": ["Lena", "Hale"],
+  "entities": ["abandoned station", "colony", "sequence"],
+  "themes": ["regret", "responsibility"],
+  "sentiment": "negative",
+  "tone": "heavy, conflicted",
+  "narrative_role": "moral decision setup",
+  "character_dynamics": "Lena hesitates; Hale pushes for action",
+  "keywords": ["ruined", "decide", "sequence"]
+}
+
+---------------------------------------
+Example B
+Scene:
+Arin shut the dusty book as something ancient stirred.
+Mira hurried to block the passage before it could spread.
+
+Result:
+{
+  "characters": ["Arin", "Mira"],
+  "entities": ["dusty book", "passage"],
+  "themes": ["danger", "uncontrolled force"],
+  "sentiment": "negative",
+  "tone": "urgent, fearful",
+  "narrative_role": "beginning of conflict",
+  "character_dynamics": "Arin unleashes the threat; Mira attempts containment",
+  "keywords": ["ancient", "spread", "block"]
+}
+
+---------------------------------------
+Now analyze the new scene:
+
+Scene:
+Evelyn stepped into the dim control room as alarms kept echoing. 
+Dr. Marcus avoided her gaze while the Captain insisted she override the failing mission protocol. 
+Evelyn refused — she would not obey blindly again.
+
+Produce the result using the same structure.
